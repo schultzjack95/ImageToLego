@@ -1,8 +1,9 @@
 import rebrick
 import json
+from key import API_KEY
 
 # init Rebrick tool
-rb = rebrick.Rebrick(api_key="15b882fd571ffae85bdd8cf05d7ab057")
+rb = rebrick.Rebrick(api_key=API_KEY)
 
 # part id 3005 is the basic 1x1 brick
 part_id = 3005
