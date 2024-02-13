@@ -1,2 +1,4 @@
 key.py
+*.png
+*.jpg
 __pycache__/
