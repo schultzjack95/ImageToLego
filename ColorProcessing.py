@@ -1,37 +1,6 @@
 from PIL import Image
 from math import sqrt
 
-def convertImageToLegoColorsTest():
-    '''
-    Use sample image and very basic color list as PoC.
-    '''
-    image = "./eevees.png"
-    color_dict = {
-            "black" : (0,  0, 0),
-            "white" : (255, 255, 255),
-            "red" : (255, 0, 0),
-            "green" : (0, 255, 0),
-            "blue" : (0, 0, 255),
-            "cyan" : (0, 255, 255),
-            "yellow" : (255, 255, 0),
-            "magenta" : (255, 0, 255)
-            }
-
-    with Image.open(image) as im:
-        img = im.load()
-    
-    result_im = im.copy()
-    print(img[im.width // 2, im.height // 2])
-    #img.show()
-    for x in range(im.width):
-        for y in range(im.height):
-            result_im.putpixel((x, y), identifyNewPixelColor(img[x, y], color_dict))
-
-    result_im.show()
-
-    return result_im
-
-
 def convertImageToLegoColors(image, colors):
     with Image.open(image) as im:
         px = im.load()
