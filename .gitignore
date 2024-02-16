@@ -1,4 +1,6 @@
 key.py
+profiler.py
+restats
 *.png
 *.jpg
 __pycache__/
