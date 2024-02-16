@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 
+
 def acquireImage():
     """
     User selects an image file.

@@ -1,16 +1,26 @@
-from PIL import Image
 from math import sqrt
+
+from PIL import Image
+from tqdm.contrib import itertools
+
+COLORS = {}
+BEST_MATCHES = {}
+
+def mylambda(i):
+    return i*2
 
 def convertImageToLegoColors(image, colors):
     with Image.open(image) as im:
         px = im.load()
     result = im.copy()
+    
+    global COLORS
+    COLORS = colors
 
-    for x in range(im.width):
-        for y in range(im.height):
-            result.putpixel((x, y), identifyNewPixelColor(im.getpixel((x, y)), colors))
+    for x, y in itertools.product(range(im.width), range(im.height), desc="Progress"):
+        result.putpixel((x, y), identifyNewPixelColor(im.getpixel((x, y)), colors))
+    #result = result.point(pickNearestColor)
 
-    result.show()
     return result
 
 def identifyNewPixelColor(old_color, color_dict):
@@ -18,11 +28,33 @@ def identifyNewPixelColor(old_color, color_dict):
     Takes the original pixel color and chooses the closest from the provided list of options.
     Returns a 3-tuple containing the rgb of the selected color.
     '''
+    global BEST_MATCHES
+    if old_color in BEST_MATCHES:
+        return BEST_MATCHES[old_color]
+    
+    # Not found in cache, do it the hard way
     (r1, g1, b1) = old_color
     minimum_distance = float("inf")
     closest_match = (0, 0, 0)
 
     for key, value in color_dict.items():
+        (r2, g2, b2) = value
+        distance = sqrt((r2-r1)**2 + (g2-g1)**2 + (b2-b1)**2)
+        if distance < minimum_distance:
+            minimum_distance = distance
+            closest_match = (r2, g2, b2)
+
+    # Update cache
+    BEST_MATCHES[old_color] = closest_match
+
+    return closest_match
+
+def pickNearestColor(rgb):
+    r1, g1, b1 = rgb
+    min_dist = float("inf")
+    closest_match = (0, 0, 0)
+
+    for key, value in COLORS.items():
         (r2, g2, b2) = value
         distance = sqrt((r2-r1)**2 + (g2-g1)**2 + (b2-b1)**2)
         if distance < minimum_distance:
