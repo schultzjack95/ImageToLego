@@ -3,11 +3,12 @@ from math import sqrt
 from PIL import Image
 from tqdm.contrib import itertools
 
+# COLORS[name] = (r,g,b)
 COLORS = {}
+
+# BEST_MATCHES[original_color] = [(r,g,b) of closest match, count]
 BEST_MATCHES = {}
 
-def mylambda(i):
-    return i*2
 
 def convertImageToLegoColors(image, colors):
     with Image.open(image) as im:
@@ -21,7 +22,7 @@ def convertImageToLegoColors(image, colors):
         result.putpixel((x, y), identifyNewPixelColor(im.getpixel((x, y)), colors))
     #result = result.point(pickNearestColor)
 
-    return result
+    return result, BEST_MATCHES
 
 def identifyNewPixelColor(old_color, color_dict):
     '''
@@ -30,7 +31,8 @@ def identifyNewPixelColor(old_color, color_dict):
     '''
     global BEST_MATCHES
     if old_color in BEST_MATCHES:
-        return BEST_MATCHES[old_color]
+        BEST_MATCHES[old_color][1] += 1
+        return BEST_MATCHES[old_color][0]
     
     # Not found in cache, do it the hard way
     (r1, g1, b1) = old_color
@@ -45,7 +47,7 @@ def identifyNewPixelColor(old_color, color_dict):
             closest_match = (r2, g2, b2)
 
     # Update cache
-    BEST_MATCHES[old_color] = closest_match
+    BEST_MATCHES[old_color] = [closest_match, 1]
 
     return closest_match
 
