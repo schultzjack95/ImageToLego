@@ -1,7 +1,6 @@
 import argparse
 import json
 import os.path
-import sys
 
 import rebrick
 
@@ -19,7 +18,7 @@ def hex_to_rgb(value):
 def save_image(result, file_path):
     sindex = file_path.rfind("/")
     dindex = file_path.find(".")
-            
+    
     result.save("output/" + file_path[sindex+1:dindex] + "_conv" + file_path[dindex:])
     print("Image file saved in 'output/'.")
 
@@ -27,7 +26,8 @@ def save_parts_list(parts, file_path):
     sindex = file_path.rfind('/')
     dindex = file_path.find('.')
 
-    with open("output/parts_list_for_" + file_path[sindex+1:dindex] + ".txt", 'w', encoding='utf-8') as f:
+    with open("output/parts_list_for_" + file_path[sindex+1:dindex] + ".txt",
+            'w', encoding='utf-8') as f:
         total = sum(a[1] for a in parts.values())
         print("A total of", total, "pieces of part id", data.options.PART_ID, ".", file=f)
         print(file=f)
@@ -43,8 +43,10 @@ if __name__ == "__main__":
             description="Recreates the given image in a limited palette of LEGO Brick colors.")
     #file -s SAVE -v VIEW -p
     parser.add_argument("file", help="File to be converted")
-    parser.add_argument("-s", "--save", help="Y/y to save result, N/n to discard after viewing", choices=['Y', 'y', 'N', 'n'])
-    parser.add_argument("-v", "--view", help="Displays the result on-screen when enabled", action="store_true")
+    parser.add_argument("-s", "--save",
+            help="Y/y to save result, N/n to discard after viewing", choices=['Y', 'y', 'N', 'n'])
+    parser.add_argument("-v", "--view",
+            help="Displays the result on-screen when enabled", action="store_true")
     parser.add_argument("-p", "--parts", help="-[p|pp|ppp]. Computes the necessary pieces of each color needed to physically craft the result. If excluded, do not compute total. -p: print total on screen. -pp: save the results to a file. -ppp: both display and save the total", action="count", default=0)
     args = parser.parse_args()
     
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     response = None
     color_dict = None
     
-    if (data.options.UPDATE_COLOR_LIST):
+    if data.options.UPDATE_COLOR_LIST:
         # init Rebrick tool
         rb = rebrick.Rebrick(api_key=data.key.API_KEY)
         
@@ -82,7 +84,7 @@ if __name__ == "__main__":
         
     else:
         # Use cached color list
-        with open("data/color_cache.json", 'r') as f:
+        with open("data/color_cache.json", 'r', encoding='utf-8') as f:
             color_dict = json.load(f)
 
     print("Total valid target colors:", len(color_dict))

@@ -65,5 +65,3 @@ def pickNearestColor(rgb):
 
     return closest_match
 
-if __name__ == "__main__":
-    convertImageToLegoColorsTest()
